@@ -23,7 +23,7 @@ def Algo1_NUM(mode,h,w,Q,Y, V=20):
     phi = 100  # number of cpu cycles for processing 1 bit data
     W = 2  # bandwidth MHz
     k_factor = (10**(-26))*(d_fact**3)
-    vu =1.1
+    vu =1.1  # 通信开销
     
     N0 = W*d_fact*(10**(-17.4))*(10**(-3))*ch_fact # noise power in watt
     P_max = 0.1 # maximum transmit power 100mW

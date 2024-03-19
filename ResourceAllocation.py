@@ -22,7 +22,7 @@ def Algo1_NUM(mode,h,w,Q,Y, V=20):
     Y = Y*Y_factor
     phi = 100  # number of cpu cycles for processing 1 bit data
     W = 2  # bandwidth MHz
-    k_factor = (10**(-26))*(d_fact**3)
+    k_factor = (10**(-26))*(d_fact**3)  # 其中1e-26是本地计算能耗的参数,d_fact可能是缩放因子如ch_fact
     vu =1.1  # 通信开销
     
     N0 = W*d_fact*(10**(-17.4))*(10**(-3))*ch_fact # noise power in watt
@@ -39,7 +39,7 @@ def Algo1_NUM(mode,h,w,Q,Y, V=20):
     q = Q
    
     for i in range(len(a)):
-        a[i] = Q[i]  + V*w[i]
+        a[i] = Q[i]  + V*w[i]  # 公式（21）、（30）的目标中的r的前面的参数
        
     energy = np.zeros((N));
     rate = np.zeros((N));
@@ -66,10 +66,10 @@ def Algo1_NUM(mode,h,w,Q,Y, V=20):
             else:
                 tmp1 = np.sqrt(a0[i]/3/phi/k_factor/Y0[i])
                 tmp2 = np.minimum(phi*q0[i],f_max)
-                f0[i] = np.minimum(tmp1,tmp2)
-            energy[tmp_id] = k_factor*(f0[i]**3);
-            rate[tmp_id] = f0[i]/phi;
-            f0_val =  f0_val + a0[i]*rate[tmp_id] - Y0[i]*energy[tmp_id];                         
+                f0[i] = np.minimum(tmp1,tmp2) # 论文中的公式（31），计算本地计算时最优的f分配
+            energy[tmp_id] = k_factor*(f0[i]**3);  # 根据分配的最优的f计算本地能耗，公式（1）
+            rate[tmp_id] = f0[i]/phi;  # 公式（1）,根据计算频率除以每bit数据所需的计算频率，得到计算数据量
+            f0_val =  f0_val + a0[i]*rate[tmp_id] - Y0[i]*energy[tmp_id];  # 公式（21）中的目标，f0_val为累积所有选择M0模式的用户的目标                       
             
     idx1=np.where(mode==1)[0]
     M1 = len(idx1) 
